@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Housing Loan Simulator</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Favicon links -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+
+<body>
+    <!-- Left Panel -->
+    <div class="container">
+        <h1>HOUSING LOAN SIMULATOR</h1>
+        <form id="loan-form">
+            <div class="form-group">
+                <label for="start-date">Amortization Start Date:</label>
+                <input type="date" id="start-date" name="start-date" required />
+            </div>
+            <div class="form-group">
+                <label for="loan-amount">Loan Amount (₱):</label>
+                <input type="number" id="loan-amount" step="any" placeholder="₱ 0.00" required />
+            </div>
+            <div class="form-group">
+                <label for="loan-term">Loan Term:</label>
+                <select id="loan-term" required>
+                    <option value="1">1 year</option>
+                    <option value="3">3 years</option>
+                    <option value="5">5 years</option>
+                    <option value="10">10 years</option>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="25">25 years</option>
+                    <option value="30">30 years</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="repricing-period">Repricing Period:</label>
+                <select id="repricing-period" required>
+                    <option value="1">1 year</option>
+                    <option value="3">3 years</option>
+                    <option value="5">5 years</option>
+                    <option value="10">10 years</option>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="25">25 years</option>
+                    <option value="30">30 years</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="interest-rate">Annual Interest Rate:</label>
+                <select id="interest-rate" required>
+                    <option value="5.750">5.750%</option>
+                    <option value="6.250">6.250%</option>
+                    <option value="6.500">6.500%</option>
+                    <option value="7.125">7.125%</option>
+                    <option value="7.750">7.750%</option>
+                    <option value="8.500">8.500%</option>
+                    <option value="9.125">9.125%</option>
+                    <option value="9.750">9.750%</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="monthly-lumpsum">Monthly Lump Sum (₱):</label>
+                <input type="number" id="monthly-lumpsum" step="any" placeholder="₱ 0.00" required />
+            </div>
+            <div class="form-group">
+                <label for="lumpsum-frequency">Lump Sum Frequency:
+                    <span
+                        title="How often your lump sum payments are made. For example, 'Annual' means every 12 months."
+                        style="cursor: help; color: #888; margin-left: 4px;">ℹ️</span>
+                </label>
+                <select id="lumpsum-frequency" required>
+                    <option value="1">Monthly</option>
+                    <option value="3">Quarterly</option>
+                    <option value="6">Semiannual</option>
+                    <option value="12">Annual</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lumpsum-month">Lump Sum Month:
+                    <span title="Which month your lump sum will be paid."
+                        style="cursor: help; color: #888; margin-left: 4px;">ℹ️</span>
+                </label>
+                <select id="lumpsum-month" required>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <button type="submit">Calculate</button>
+        </form>
+
+        <div class="result">
+            <label>Payable In:</label>
+            <span id="payableInResult"></span>
+        </div>
+        <div class="result">
+            <label>Base Amortization:</label>
+            <span id="monthlyBaseAmortization" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Mortgage Redemption Insurance:
+                <label title="Monthly; loan amount multiplied to 0.1686% divided by 12 months."
+                    style="cursor: help; color: #888; margin-left: 4px;">ℹ️</label>
+            </label>
+            <span id="mri" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Fire Insurance:
+                <label title="Monthly; loan amount divided by 1000 multiplied to 0.23 divided by 12 months."
+                    style="cursor: help; color: #888; margin-left: 4px;">ℹ️</label>
+            </label>
+            <span id="fireInsurance" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Monthly Payment:
+                <label title="From the start date until the first repricing period."
+                    style="cursor: help; color: #888; margin-left: 4px;">ℹ️</label>
+            </label>
+            <span id="totalMonthlyAmortization" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label id="targetLumpSumLabel"></label>
+            <span id="targetLumpsum" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Base Amortization Paid:</label>
+            <span id="totalAmortizationPaid" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Insurance Premium Paid:</label>
+            <span id="totalInsurancePremiumPaid" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Lump Sum Paid:</label>
+            <span id="totalLumpSumPaid" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Interest Paid:</label>
+            <span id="totalInterestPaid" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Principal Paid:</label>
+            <span id="totalPrincipalPaid" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label>Total Loan Cost:
+                <label title="Excluding insurance premium."
+                    style="cursor: help; color: #888; margin-left: 4px;">ℹ️</label></label>
+            <span id="totalLoanCost" class="money-field">0.00</span>
+        </div>
+        <div class="result">
+            <label id="interestSavedLabel"></label>
+            <span id="interestSaved" class="money-field">0.00</span>
+        </div>
+    </div>
+
+    <!-- Wrapper for both the header and body table -->
+    <div class="table-wrapper">
+        <table id="payment-table">
+            <thead>
+                <tr>
+                    <th>Payment Due</th>
+                    <th>Base Amortization</th>
+                    <th>Insurance Premium</th>
+                    <th>Lump Sum</th>
+                    <th>Interest</th>
+                    <th>Principal</th>
+                    <th>Remaining Balance</th>
+                </tr>
+            </thead>
+            <tbody id="payment-table-body">
+                <!-- rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
