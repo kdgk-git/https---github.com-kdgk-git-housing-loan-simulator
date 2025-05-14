@@ -85,7 +85,8 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
     let totalInterestPaid = 0;
     let totalPrincipalPaid = 0;
 
-    for (let i = 0; i <= numberOfPayments; i++) {
+    let i = 0;
+    while (remainingBalance > 0.01) {
 
         // Payment Due (First row uses the start date, then add 1 month for each row)
         const paymentDue = new Date(startDate);
@@ -130,10 +131,24 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
             } else {
                 lumpsum = monthlyLumpsum * lumpsumFrequency;
             }
+
+            // Cap lumpsum so it doesn't exceed remaining balance
+            lumpsum = Math.min(lumpsum, remainingBalance);
         }
 
-        // Calculate principal payment
-        const principalPayment = currentMonthlyBaseAmortization + lumpsum - interestPayment;
+        // Step 1: Calculate base principal (monthly amortization minus interest)
+let basePrincipal = currentMonthlyBaseAmortization - interestPayment;
+basePrincipal = Math.max(basePrincipal, 0); // Avoid negatives
+
+// Step 2: Determine how much total principal we can pay (base + lump sum)
+let maxPrincipalPayment = Math.min(remainingBalance, basePrincipal + lumpsum);
+
+// Step 3: Adjust the lump sum so that base + lumpsum = total principal
+let adjustedLumpSum = Math.max(0, maxPrincipalPayment - basePrincipal);
+
+// Step 4: Final total principal paid this month
+let principalPayment = basePrincipal + adjustedLumpSum;
+
 
         // Calculate Insurance Premium
         const insurancePremium = mri + fireInsurance;
@@ -141,7 +156,7 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
         // Compute Total Paid from Start Date to Latest
         totalAmortizationPaid += currentMonthlyBaseAmortization;
         totalInsurancePremiumPaid += insurancePremium;
-        totalLumpSumPaid += lumpsum;
+        totalLumpSumPaid += adjustedLumpSum;
         totalInterestPaid += interestPayment;
         totalPrincipalPaid += principalPayment;
 
@@ -172,7 +187,7 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
         <td>${paymentDueFormatted}</td>
         <td>₱${formatter.format(currentMonthlyBaseAmortization)}</td>
         <td>₱${formatter.format(insurancePremium)}</td>
-        <td>₱${formatter.format(lumpsum)}</td>
+        <td>₱${formatter.format(adjustedLumpSum)}</td>
         <td>₱${formatter.format(interestPayment)}</td>
         <td>₱${formatter.format(principalPayment)}</td>
         <td>₱${formatter.format(Math.max(remainingBalance, 0))}</td>
@@ -181,6 +196,8 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
         paymentTableBody.appendChild(row);
 
         if (remainingBalance <= 0) break;
+
+        i++;
     }
 
     // Compute Total Paid from Start Date to Latest
