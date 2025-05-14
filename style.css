@@ -206,22 +206,3 @@ button:hover {
     color: #0067a5;
     font-size: 11px;
 }
-
-.page-wrapper {
-    display: flex;
-    flex-direction: row;
-    width: max-content; /* Allows it to grow beyond viewport width */
-    min-width: 100%;
-}
-
-/* Enable horizontal scroll on small screens */
-@media (max-width: 768px) {
-    html, body {
-        overflow-x: auto;
-    }
-
-    .page-wrapper {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-}
