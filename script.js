@@ -9,7 +9,7 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
     const startDate = new Date(document.getElementById("start-date").value); // Get the start date
     const monthlyLumpsum = parseFloat(document.getElementById("monthly-lumpsum").value.replace(/,/g, ''));
     const lumpsumFrequency = parseFloat(document.getElementById("lumpsum-frequency").value);
-    const lumpsumMonth = parseInt(document.getElementById("lumpsum-month").value);
+    // const lumpsumMonth = parseInt(document.getElementById("lumpsum-month").value);
 
     // Validate inputs
     if (isNaN(loanAmount) || isNaN(annualInterestRate) || isNaN(loanTerm) || loanAmount <= 0 || annualInterestRate <= 0 || loanTerm <= 0 || isNaN(startDate)) {
@@ -125,16 +125,10 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
 
         // Calculate lump sum for this month
         let lumpsum = 0;
-        if ((paymentDue.getMonth() + 1) === lumpsumMonth && remainingBalance > 0) {
-            if (paymentDue.getFullYear() === startDate.getFullYear()) {
-                lumpsum = monthlyLumpsum * Math.max(lumpsumMonth - (startDate.getMonth() + 1), 0);
-            } else {
-                lumpsum = monthlyLumpsum * lumpsumFrequency;
-            }
+if (lumpsumFrequency > 0 && i > 0 && i % lumpsumFrequency === 0) {
+    lumpsum = Math.min(monthlyLumpsum * lumpsumFrequency, remainingBalance);
+}
 
-            // Cap lumpsum so it doesn't exceed remaining balance
-            lumpsum = Math.min(lumpsum, remainingBalance);
-        }
 
         // Step 1: Calculate base principal (monthly amortization minus interest)
 let basePrincipal = currentMonthlyBaseAmortization - interestPayment;
