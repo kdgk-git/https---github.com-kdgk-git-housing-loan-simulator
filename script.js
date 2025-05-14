@@ -125,23 +125,23 @@ document.getElementById("loan-form").addEventListener("submit", function (event)
 
         // Calculate lump sum for this month
         let lumpsum = 0;
-if (lumpsumFrequency > 0 && i > 0 && i % lumpsumFrequency === 0) {
-    lumpsum = Math.min(monthlyLumpsum * lumpsumFrequency, remainingBalance);
-}
+        if (lumpsumFrequency > 0 && i > 0 && i % lumpsumFrequency === 0) {
+            lumpsum = Math.min(monthlyLumpsum * lumpsumFrequency, remainingBalance);
+        }
 
 
         // Step 1: Calculate base principal (monthly amortization minus interest)
-let basePrincipal = currentMonthlyBaseAmortization - interestPayment;
-basePrincipal = Math.max(basePrincipal, 0); // Avoid negatives
+        let basePrincipal = currentMonthlyBaseAmortization - interestPayment;
+        basePrincipal = Math.max(basePrincipal, 0); // Avoid negatives
 
-// Step 2: Determine how much total principal we can pay (base + lump sum)
-let maxPrincipalPayment = Math.min(remainingBalance, basePrincipal + lumpsum);
+        // Step 2: Determine how much total principal we can pay (base + lump sum)
+        let maxPrincipalPayment = Math.min(remainingBalance, basePrincipal + lumpsum);
 
-// Step 3: Adjust the lump sum so that base + lumpsum = total principal
-let adjustedLumpSum = Math.max(0, maxPrincipalPayment - basePrincipal);
+        // Step 3: Adjust the lump sum so that base + lumpsum = total principal
+        let adjustedLumpSum = Math.max(0, maxPrincipalPayment - basePrincipal);
 
-// Step 4: Final total principal paid this month
-let principalPayment = basePrincipal + adjustedLumpSum;
+        // Step 4: Final total principal paid this month
+        let principalPayment = basePrincipal + adjustedLumpSum;
 
 
         // Calculate Insurance Premium

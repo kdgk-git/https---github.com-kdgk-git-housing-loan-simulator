@@ -11,22 +11,37 @@ body {
 /* Left side panel */
 .container {
     background-color: white;
-    padding: 15px;
+    padding: 0px;
     border-radius: 8px;
     width: 345px;
     height: 100vh;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 h1 {
     text-align: center;
     font-size: 15px;
     color: #0067a5;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
     margin-top: 0px;
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    padding: 15px;
+}
+
+.scrollable-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .form-group {
@@ -100,6 +115,32 @@ button:hover {
     box-sizing: border-box;
 }
 
+.result.sentence-style {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.result.sentence-style label {
+    width: auto;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 11px;
+    color: #000;
+}
+
+.result.sentence-style span {
+    width: auto;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 11px;
+    color: #0067a5;
+    text-align: right;
+}
+
 .money-field::before {
     content: "₱ ";
     margin-right: 4px;
@@ -110,11 +151,18 @@ button:hover {
 /* Right side for table */
 .table-wrapper {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     height: 100vh;
-    overflow-y: auto;
     padding: 0;
     box-sizing: border-box;
     background-color: white;
+    overflow: hidden;
+}
+
+.table-scroll {
+    flex: 1;
+    overflow-y: auto;
 }
 
 /* Make table full width and sticky header */
@@ -152,4 +200,9 @@ button:hover {
 
 #payment-table tr:hover {
     background-color: #f1f1f1;
+}
+
+#payableInResult {
+    color: #0067a5;
+    font-size: 11px;
 }
